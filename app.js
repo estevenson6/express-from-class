@@ -1,5 +1,8 @@
 const express = require("express");
 const hbs = require("hbs");
+const mongoose = require("mongoose");
+
+const Pizza = require("./models/Pizza.model");
 
 const app = express();
 
@@ -9,6 +12,18 @@ app.set("views", __dirname + "/views"); //tells our Express app where to look fo
 app.set("view engine", "hbs"); //sets HBS as the template engine
 
 hbs.registerPartials(__dirname + "/views/partials"); //tell HBS which directory we use for partials
+
+
+
+mongoose
+  .connect('mongodb://127.0.0.1/loopeyRestaurant')
+  .then(x => {
+    console.log(`Connected! Database name: "${x.connections[0].name}"`);
+  })
+  .catch( e => console.log("error connecting to DB", e));
+
+
+
 
 
 
@@ -28,31 +43,29 @@ app.get("/contact", (req, res, next) => {
 // GET /pizzas/margarita
 app.get("/pizzas/margarita", (req, res, send) => {
 
-    const pizzaDetails = {
-        title: 'Pizza Margarita',
-        price: 12,
-        recommendedDrink: 'beer',
-        imageFile: 'pizza-margarita.jpg',
-        ingredients: ['mozzarella', 'tomato sauce', 'basilicum'],
-    };
+    Pizza.findOne({title: "margarita"})
+        .then( (pizzaFromDB) => {
+            // console.log(pizzaFromDB)
+            res.render("product", pizzaFromDB);
+        })
+        .catch( e => console.log("error getting pizza from DB", e));
 
-    res.render("product", pizzaDetails);
 });
+
+
+
 
 
 
 // GET /pizzas/veggie
 app.get("/pizzas/veggie", (req, res, send) => {
 
-    const pizzaDetails = {
-        title: 'Veggie Pizza',
-        price: 15,
-        recommendedDrink: 'power smoothie',
-        imageFile: 'pizza-veggie.jpg',
-        ingredients: ['cherry tomatoes', 'basilicum', 'Olives'],
-    };
+    Pizza.findOne({title: "veggie"})
+        .then( (pizzaFromDB) => {
+            res.render("product", pizzaFromDB);
+        })
+        .catch( e => console.log("error getting pizza from DB", e));
 
-    res.render("product", pizzaDetails)
 });
 
 
@@ -61,14 +74,12 @@ app.get("/pizzas/veggie", (req, res, send) => {
 // GET /pizzas/seafood
 app.get("/pizzas/seafood", (req, res, send) => {
 
-    const pizzaDetails = {
-        title: 'Seafood Pizza',
-        recommendedDrink: 'white wine',
-        imageFile: 'pizza-seafood.jpg',
-        ingredients: ['tomato sauce', 'garlic', 'prawn'],
-    };
+    Pizza.findOne({ title: "seafood" })
+        .then((pizzaFromDB) => {
+            res.render("product", pizzaFromDB);
+        })
+        .catch(e => console.log("error getting pizza from DB", e));
 
-    res.render("product", pizzaDetails);
 });
 
 
