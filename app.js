@@ -44,8 +44,22 @@ app.get("/contact", (req, res, next) => {
 // GET /pizzas
 app.get("/pizzas", (req, res, next) => {
 
+    // console.log(req.query); // req.query is an object
+    // console.log(typeof req.query.maxPrice); // we will receive a string
 
-    Pizza.find()
+    // const {maxPrice} = req.query; // using object destructuring
+    
+    let maximumPrice = req.query.maxPrice;
+    maximumPrice = Number(maximumPrice); //convert to a number
+
+
+    let filter = {}
+    if(maximumPrice){
+        filter = {price: {$lte: maximumPrice}};
+    }
+
+
+    Pizza.find(filter)
         .then( (pizzas) => {
 
             const data = {
