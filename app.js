@@ -24,7 +24,9 @@ mongoose
 
 
 
-
+/**********/
+/* Routes */
+/**********/
 
 
 // GET /
@@ -39,11 +41,31 @@ app.get("/contact", (req, res, next) => {
 });
 
 
+// GET /pizzas
+app.get("/pizzas", (req, res, next) => {
 
-// GET /pizzas/margarita
-app.get("/pizzas/margarita", (req, res, send) => {
 
-    Pizza.findOne({title: "margarita"})
+    Pizza.find()
+        .then( (pizzas) => {
+
+            const data = {
+                pizzasArr: pizzas
+            }
+
+            res.render("product-list", data)
+        })
+        .catch( e => console.log("error getting pizzas from DB", e));
+
+
+});
+
+
+// GET /pizzas/:pizzaName
+app.get("/pizzas/:pizzaName", (req, res, next) => {
+    
+    // console.log(req.params.pizzaName);
+
+    Pizza.findOne({title: req.params.pizzaName})
         .then( (pizzaFromDB) => {
             // console.log(pizzaFromDB)
             res.render("product", pizzaFromDB);
@@ -55,32 +77,18 @@ app.get("/pizzas/margarita", (req, res, send) => {
 
 
 
+//
+// ROUTE PARAMS
+//
 
-
-// GET /pizzas/veggie
-app.get("/pizzas/veggie", (req, res, send) => {
-
-    Pizza.findOne({title: "veggie"})
-        .then( (pizzaFromDB) => {
-            res.render("product", pizzaFromDB);
-        })
-        .catch( e => console.log("error getting pizza from DB", e));
-
+app.get("/drinks/:drinkName", (req, res, next) => {
+    console.log(req.params);
+    res.send(`display info about.... ${req.params.drinkName}`);
 });
 
 
 
 
-// GET /pizzas/seafood
-app.get("/pizzas/seafood", (req, res, send) => {
-
-    Pizza.findOne({ title: "seafood" })
-        .then((pizzaFromDB) => {
-            res.render("product", pizzaFromDB);
-        })
-        .catch(e => console.log("error getting pizza from DB", e));
-
-});
 
 
 app.listen(3000, () => { console.log("server listening on port 3000...")});
