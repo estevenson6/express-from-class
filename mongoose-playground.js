@@ -19,7 +19,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/loopeyRestaurant")
     })
     .then( (pizzaFromDB) => {
         console.log("a new pizza was created with id...", pizzaFromDB._id);
-        return Pizza.find({title: "margarita"})
+        return Pizza.find({title: "Pizza Margherita"})
     })
     .then( (pizzasArr) => {
         console.log("I currently have this amount of pizzas...", pizzasArr.length);
